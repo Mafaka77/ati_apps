@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "302008020891",
+    "project_id": "ati-training-256e5",
+    "storage_bucket": "ati-training-256e5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:302008020891:android:26e07afda23a1d5d13fb3e",
+        "android_client_info": {
+          "package_name": "com.msegs.training_apps"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9x9WoLot0Mg9NbyFVAZHjDPZWobypoZE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
