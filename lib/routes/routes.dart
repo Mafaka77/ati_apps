@@ -1,8 +1,8 @@
 class Routes {
-  // static String BASE_URL = 'http://192.168.29.8:5001/api';
-  // static String IMAGE_URL = 'http://192.168.29.8:5001';
-  static String BASE_URL = 'https://atimz.mizoram.gov.in/api';
-  static String IMAGE_URL = 'https://atimz.mizoram.gov.in';
+  static String BASE_URL = 'http://192.168.29.8:5001/api';
+  static String IMAGE_URL = 'http://192.168.29.8:5001';
+  // static String BASE_URL = 'https://atimz.mizoram.gov.in/api';
+  // static String IMAGE_URL = 'https://atimz.mizoram.gov.in';
   static String LOGIN = '/login';
   static String GROUPS = '/groups';
   static String ME = '/me';
@@ -44,6 +44,8 @@ class Routes {
 
   //CERTIFICATE
   static String CERTIFICATEANDRELEASEORDER = '/certificate-and-release-order';
+  //DOCUMENTS
+  static String GET_DOCUMENTS = '/documents';
   //FCM
   static String REGISTER_TOKEN = '/fcm/register-token';
 }

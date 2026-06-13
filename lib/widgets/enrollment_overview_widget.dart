@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:training_apps/controllers/enrollment_detail_controller.dart';
@@ -13,7 +12,14 @@ class EnrollmentOverviewWidget extends GetView<EnrollmentDetailController> {
     if (controller.enrollmentDetail.isEmpty) return const SizedBox.shrink();
 
     final data = controller.enrollmentDetail.first;
+    final program = data.training_program;
     final DateFormat formatter = DateFormat('dd MMM yyyy');
+
+    // Handle the room list logic
+    String roomDisplay = "No room assigned";
+    if (program.t_room != null && program.t_room!.isNotEmpty) {
+      roomDisplay = program.t_room!.map((r) => r.room_name).join(", ");
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,7 +35,7 @@ class EnrollmentOverviewWidget extends GetView<EnrollmentDetailController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                data.training_program.t_name,
+                program.t_name,
                 style: TextStyle(
                   fontSize: 16,
                   height: 1.6,
@@ -38,50 +44,47 @@ class EnrollmentOverviewWidget extends GetView<EnrollmentDetailController> {
                 ),
               ),
               sizedBoxHeight(20),
+
               _buildListTile(
                 icon: Icons.calendar_today_rounded,
                 label: "Start Date",
                 value: formatter.format(
-                  DateTime.parse(data.training_program.t_start_date).toLocal(),
+                  DateTime.parse(program.t_start_date).toLocal(),
                 ),
                 iconColor: Colors.orange,
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 12),
-                child: Divider(height: 1, thickness: 0.5),
-              ),
+
+              const _CustomDivider(),
+
               _buildListTile(
                 icon: Icons.event_available_rounded,
                 label: "End Date",
                 value: formatter.format(
-                  DateTime.parse(data.training_program.t_end_date).toLocal(),
+                  DateTime.parse(program.t_end_date).toLocal(),
                 ),
                 iconColor: Colors.redAccent,
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 12),
-                child: Divider(height: 1, thickness: 0.5),
-              ),
+
+              const _CustomDivider(),
+
               _buildListTile(
                 icon: Icons.room_rounded,
-                label: "Room",
-                value: data.training_program.t_room!.room_name,
+                label: program.t_room!.length > 1 ? "Rooms" : "Room",
+                value: roomDisplay,
                 iconColor: Colors.indigo,
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 12),
-                child: Divider(height: 1, thickness: 0.5),
-              ),
+
+              const _CustomDivider(),
+
               _buildListTile(
                 icon: Icons.apartment,
-                label: "Capacity ",
-                value: data.training_program.t_capacity.toString(),
+                label: "Capacity",
+                value: program.t_capacity.toString(),
                 iconColor: Colors.pinkAccent,
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 12),
-                child: Divider(height: 1, thickness: 0.5),
-              ),
+
+              const _CustomDivider(),
+
               _buildEligibilitySection(data),
             ],
           ),
@@ -90,50 +93,6 @@ class EnrollmentOverviewWidget extends GetView<EnrollmentDetailController> {
     );
   }
 
-  Widget _buildStatCard(
-    BuildContext context,
-    String title,
-    String value,
-    IconData icon,
-    Color color,
-  ) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.08),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: color.withOpacity(0.1)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(icon, color: color, size: 24),
-            const SizedBox(height: 12),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 12,
-                color: color.withOpacity(0.8),
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              value,
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // Helper for the detailed list items
   Widget _buildListTile({
     required IconData icon,
     required String label,
@@ -141,6 +100,8 @@ class EnrollmentOverviewWidget extends GetView<EnrollmentDetailController> {
     required Color iconColor,
   }) {
     return Row(
+      crossAxisAlignment:
+          CrossAxisAlignment.start, // Better for multi-line room names
       children: [
         Container(
           padding: const EdgeInsets.all(8),
@@ -151,33 +112,38 @@ class EnrollmentOverviewWidget extends GetView<EnrollmentDetailController> {
           child: Icon(icon, size: 18, color: iconColor),
         ),
         const SizedBox(width: 16),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              label,
-              style: const TextStyle(
-                fontSize: 11,
-                color: Colors.black45,
-                fontWeight: FontWeight.w500,
+        Expanded(
+          // Wrap in Expanded to prevent overflow if room names are long
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 11,
+                  color: Colors.black45,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              value,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
+              const SizedBox(height: 2),
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ],
     );
   }
 
   Widget _buildEligibilitySection(var data) {
+    final eligibility = data.training_program.t_eligibility;
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -207,34 +173,27 @@ class EnrollmentOverviewWidget extends GetView<EnrollmentDetailController> {
                 ),
               ),
               const SizedBox(height: 6),
-              // Use Wrap to display all eligibility items as badges
-              if (data.training_program.t_eligibility != null &&
-                  data.training_program.t_eligibility!.isNotEmpty)
+              if (eligibility != null && eligibility.isNotEmpty)
                 Wrap(
-                  spacing: 6, // Gap between adjacent chips
-                  runSpacing: 6, // Gap between lines
-                  children: data.training_program.t_eligibility!.map<Widget>((
-                    item,
-                  ) {
+                  spacing: 6,
+                  runSpacing: 6,
+                  children: eligibility.map<Widget>((item) {
                     return Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 10,
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF1F5F9), // Zinc-100
+                        color: const Color(0xFFF1F5F9),
                         borderRadius: BorderRadius.circular(6),
-                        border: Border.all(
-                          color: const Color(0xFFE2E8F0),
-                        ), // Zinc-200
+                        border: Border.all(color: const Color(0xFFE2E8F0)),
                       ),
                       child: Text(
                         item.groupName.toString().toUpperCase(),
                         style: const TextStyle(
                           fontSize: 10,
                           fontWeight: FontWeight.w700,
-                          color: Color(0xFF475569), // Zinc-600
-                          fontFamily: 'SN Pro',
+                          color: Color(0xFF475569),
                           letterSpacing: 0.5,
                         ),
                       ),
@@ -254,6 +213,18 @@ class EnrollmentOverviewWidget extends GetView<EnrollmentDetailController> {
           ),
         ),
       ],
+    );
+  }
+}
+
+// Small helper widget to keep build method clean
+class _CustomDivider extends StatelessWidget {
+  const _CustomDivider();
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: 12),
+      child: Divider(height: 1, thickness: 0.5),
     );
   }
 }

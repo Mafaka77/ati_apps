@@ -29,7 +29,7 @@ class NavController extends GetxController {
   ];
   final List<Widget> widgetOptions = <Widget>[
     const HomeScreen(),
-    const MyTrainingScreen(),
+    MyTrainingScreen(),
     ProfileScreen(),
   ];
   var user = <UserModel>{}.obs;

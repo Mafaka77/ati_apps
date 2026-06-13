@@ -24,7 +24,7 @@ class TrainingProgramModel {
   final int ratingsCount;
   final String createdAt;
   final TrainingCategoryModel? t_category;
-  final TrainingRoomModel? t_room;
+  final List<TrainingRoomModel>? t_room;
   // final List<TrainingCourseModel>? trainingCourse;
   TrainingProgramModel({
     // this.trainingCourse,
@@ -79,7 +79,7 @@ class TrainingProgramModel {
           : null,
 
       t_room: map['t_room'] != null
-          ? TrainingRoomModel.fromMap(map['t_room'])
+          ? TrainingRoomModel.fromJsonList(map['t_room'])
           : null,
     );
   }
@@ -89,44 +89,6 @@ class TrainingProgramModel {
     return list
         .map((item) => TrainingProgramModel.fromMap(item))
         .toList(growable: false);
-  }
-
-  TrainingProgramModel copyWith({
-    String? id,
-    String? t_name,
-    String? t_description,
-    String? t_banner,
-    String? t_start_date,
-    String? t_end_date,
-    int? t_duration,
-    List<EligibilityModel>? t_eligibility,
-    String? t_organizer,
-    int? t_capacity,
-    String? t_status,
-    int? averageRating,
-    int? ratingsCount,
-    String? createdAt,
-    TrainingCategoryModel? t_category,
-    TrainingRoomModel? t_room,
-  }) {
-    return TrainingProgramModel(
-      id: id ?? this.id,
-      t_name: t_name ?? this.t_name,
-      t_description: t_description ?? this.t_description,
-      t_banner: t_banner ?? this.t_banner,
-      t_start_date: t_start_date ?? this.t_start_date,
-      t_end_date: t_end_date ?? this.t_end_date,
-      t_duration: t_duration ?? this.t_duration,
-      t_eligibility: t_eligibility ?? this.t_eligibility,
-      t_organizer: t_organizer ?? this.t_organizer,
-      t_capacity: t_capacity ?? this.t_capacity,
-      t_status: t_status ?? this.t_status,
-      averageRating: averageRating ?? this.averageRating,
-      ratingsCount: ratingsCount ?? this.ratingsCount,
-      createdAt: createdAt ?? this.createdAt,
-      t_category: t_category ?? this.t_category,
-      t_room: t_room ?? this.t_room,
-    );
   }
 
   Map<String, dynamic> toMap() {
@@ -148,7 +110,7 @@ class TrainingProgramModel {
       'ratingsCount': ratingsCount,
       'createdAt': createdAt,
       't_category': t_category?.toMap(),
-      't_room': t_room?.toMap(),
+      't_room': t_room?.map((room) => room.toMap()).toList(),
     };
   }
 

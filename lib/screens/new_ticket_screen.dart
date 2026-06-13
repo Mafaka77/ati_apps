@@ -34,45 +34,92 @@ class NewTicketScreen extends GetView<TicketController> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(20.0),
           child: Form(
             key: controller.formState,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 1. INTRO SECTION
-                const Text(
-                  "Need Assistance?",
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.blueAccent,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 1.2,
+                // 1. HELP DESK HERO BANNER
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [
+                        Color(0xFF1E293B), // Dark Slate
+                        Color(0xFF334155), // Slate-700
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF1E293B).withOpacity(0.12),
+                        blurRadius: 12,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "ATI Help Desk",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              "Describe your concern below. Our administration support team will review and resolve it promptly.",
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.85),
+                                fontSize: 11,
+                                height: 1.4,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.15),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.support_agent_rounded,
+                          color: Colors.white,
+                          size: 32,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 8),
-                const Text(
-                  "Help us understand what's happening.",
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Color(0xFF64748B),
-                    height: 1.5,
-                  ),
-                ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 24),
 
                 // 2. FORM FIELDS CONTAINER
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: const Color(0xFFF1F5F9)),
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(
+                      color: const Color(0xFFE2E8F0),
+                    ), // Slate-200
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.02),
-                        blurRadius: 10,
+                        blurRadius: 15,
                         offset: const Offset(0, 4),
                       ),
                     ],
@@ -90,7 +137,7 @@ class NewTicketScreen extends GetView<TicketController> {
                           icon: Icons.title_rounded,
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 24),
 
                       // Category Dropdown
                       _buildLabel("Category"),
@@ -113,13 +160,13 @@ class NewTicketScreen extends GetView<TicketController> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 24),
 
                       // Description Input
                       _buildLabel("Description"),
                       TextFormField(
                         controller: controller.descriptionText,
-                        maxLines: 6,
+                        maxLines: 5,
                         maxLength: 1000,
                         validator: (v) =>
                             (v == null || v.isEmpty) ? 'Required' : null,
@@ -131,8 +178,7 @@ class NewTicketScreen extends GetView<TicketController> {
                     ],
                   ),
                 ),
-
-                const SizedBox(height: 32),
+                const SizedBox(height: 28),
 
                 // 3. SUBMIT BUTTON
                 SizedBox(
@@ -144,17 +190,25 @@ class NewTicketScreen extends GetView<TicketController> {
                       backgroundColor: const Color(0xFF1E293B), // Dark Slate
                       foregroundColor: Colors.white,
                       elevation: 0,
+                      shadowColor: const Color(0xFF1E293B).withOpacity(0.3),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),
-                    child: const Text(
-                      "SUBMIT TICKET",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w800,
-                        fontSize: 15,
-                        letterSpacing: 0.5,
-                      ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.send_rounded, size: 18),
+                        SizedBox(width: 8),
+                        Text(
+                          "SUBMIT TICKET",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 15,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -179,7 +233,7 @@ class NewTicketScreen extends GetView<TicketController> {
           style: const TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w700,
-            color: Color(0xFF334155),
+            color: Color(0xFF334155), // Slate-700
           ),
         ),
       ),
@@ -199,19 +253,19 @@ class NewTicketScreen extends GetView<TicketController> {
       filled: true,
       contentPadding: const EdgeInsets.all(16),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFFF1F5F9)),
+        borderRadius: BorderRadius.circular(16),
+        borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Colors.blueAccent, width: 1.5),
+        borderRadius: BorderRadius.circular(16),
+        borderSide: const BorderSide(color: Color(0xFF1E293B), width: 1.5),
       ),
       errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         borderSide: const BorderSide(color: Colors.redAccent, width: 1),
       ),
       focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         borderSide: const BorderSide(color: Colors.redAccent, width: 1.5),
       ),
     );

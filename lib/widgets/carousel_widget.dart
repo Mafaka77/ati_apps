@@ -30,8 +30,8 @@ class CarouselWidget extends GetView<HomeController> {
                 width: double.infinity,
                 height: Get.height * 0.23, // Match carousel height
                 margin: EdgeInsets.symmetric(horizontal: index == 0 ? 0 : 6.0),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
+                                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
                   child: Image.network(
                     Routes.IMAGE_URL + (entry.value.image_url ?? ''),
                     fit: BoxFit.cover,

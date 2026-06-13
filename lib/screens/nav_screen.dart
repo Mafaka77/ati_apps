@@ -11,30 +11,44 @@ class NavScreen extends GetView<NavController> {
 
   @override
   Widget build(BuildContext context) {
+    // Detect if software keyboard is actively drawn on view viewport
+    final bool isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
+
     return Scaffold(
       extendBody: true,
+      // 1. Force scaffold body structure to stay locked instead of compressing when keyboard expands
+      resizeToAvoidBottomInset: false,
       backgroundColor: MyColors.home_background,
       appBar: _buildAppBar(context),
       body: Stack(
         children: [
-          // Main content
+          // Main content shell view container
           Obx(
             () => controller.widgetOptions.elementAt(
               controller.selectedIndex.value,
             ),
           ),
 
-          // Custom Glass Bottom Nav
+          // Custom Glass Bottom Nav bar layer positioning
           Align(
             alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(
-                20,
-                0,
-                20,
-                MediaQuery.of(context).padding.bottom + 10,
+            child: AnimatedOpacity(
+              // 2. Smoothly fade out the navigation bar when user focus triggers standard keyboard viewport
+              duration: const Duration(milliseconds: 200),
+              opacity: isKeyboardOpen ? 0.0 : 1.0,
+              child: IgnorePointer(
+                ignoring:
+                    isKeyboardOpen, // Disable any phantom clicks when hidden
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    20,
+                    0,
+                    20,
+                    MediaQuery.of(context).padding.bottom + 10,
+                  ),
+                  child: Obx(() => _buildGlassNav()),
+                ),
               ),
-              child: Obx(() => _buildGlassNav()),
             ),
           ),
         ],
@@ -63,17 +77,14 @@ class NavScreen extends GetView<NavController> {
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
         child: Container(
-          height: 70, // Fixed height for consistent industrial feel
+          height: 70,
           decoration: BoxDecoration(
-            color: Colors.black.withOpacity(
-              0.7,
-            ), // Solider dark glass like web sidebar
+            color: Colors.black.withOpacity(0.7),
             borderRadius: BorderRadius.circular(30),
             border: Border.all(color: Colors.white.withOpacity(0.1)),
           ),
           child: Row(
-            mainAxisAlignment:
-                MainAxisAlignment.spaceAround, // Perfectly equal spacing
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _navItem(asset: 'assets/images/home.svg', index: 0),
               _navItem(asset: 'assets/images/calendar.svg', index: 1),
@@ -115,7 +126,6 @@ class NavScreen extends GetView<NavController> {
     );
   }
 
-  // Helper UI Methods
   Widget _buildAvatar() {
     return Container(
       padding: const EdgeInsets.all(2),

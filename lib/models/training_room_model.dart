@@ -23,4 +23,7 @@ class TrainingRoomModel {
       room_name: map['room_name'] as String,
     );
   }
+  static List<TrainingRoomModel> fromJsonList(List list) {
+    return list.map((e) => TrainingRoomModel.fromMap(e)).toList();
+  }
 }

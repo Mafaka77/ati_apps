@@ -21,7 +21,8 @@ class ProfileScreen extends StatelessWidget {
               style: TextStyle(
                 fontFamily: 'SN Pro',
                 color: Color(0xFF1E293B),
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w800,
+                fontSize: 18,
               ),
             ),
             centerTitle: true,
@@ -46,23 +47,32 @@ class ProfileScreen extends StatelessWidget {
                 ? controller.user.first
                 : null;
             final userName = user?.full_name ?? "User";
-            // final userEmail = user?.email ?? "email@example.com"; // If you have email
+            final userEmail = user?.email ?? "trainee.member@atimz.gov.in";
+            final userMobile = user?.mobile ?? "";
 
             return SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  // 1. HEADER SECTION
-                  _buildProfileHeader(userName),
+                  // 1. DYNAMIC HEADER SECTION CARD
+                  _buildProfileHeaderCard(
+                    context,
+                    controller,
+                    userName,
+                    userEmail,
+                    userMobile,
+                  ),
 
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 28),
 
                   // 2. ACCOUNT SETTINGS GROUP
-                  _buildSectionHeader("Account"),
+                  _buildSectionHeader("Account Settings"),
                   _buildMenuContainer([
                     _buildMenuTile(
-                      icon: Icons.person_outline_rounded,
+                      icon: Icons.manage_accounts_rounded,
                       title: "Edit Profile",
+                      iconColor: const Color(0xFF2563EB), // blue-600
+                      iconBgColor: const Color(0xFFEFF6FF), // blue-50
                       onTap: () {
                         controller.getUserDetails(
                           () => showLoader(),
@@ -81,49 +91,61 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     _buildDivider(),
                     _buildMenuTile(
-                      icon: Icons.folder_open_rounded,
-                      title: "Documents",
+                      icon: Icons.folder_shared_rounded,
+                      title: "Notice",
+                      iconColor: const Color(0xFF059669), // emerald-600
+                      iconBgColor: const Color(0xFFECFDF5), // emerald-50
                       onTap: () => Get.toNamed('/document'),
                     ),
                     _buildDivider(),
                     _buildMenuTile(
-                      icon: Icons.settings_outlined,
+                      icon: Icons.security_rounded,
                       title: "App Permissions",
+                      iconColor: const Color(0xFF7C3AED), // purple-600
+                      iconBgColor: const Color(0xFFF5F3FF), // purple-50
                       onTap: () => Get.toNamed('/app-permission'),
                     ),
                   ]),
 
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 28),
 
                   // 3. SUPPORT & LEGAL GROUP
                   _buildSectionHeader("Support & Legal"),
                   _buildMenuContainer([
                     _buildMenuTile(
-                      icon: Icons.help_outline_rounded,
+                      icon: Icons.help_center_rounded,
                       title: "FAQ's",
+                      iconColor: const Color(0xFF06B6D4), // cyan-600
+                      iconBgColor: const Color(0xFFECFEFF), // cyan-50
                       onTap: () => Get.toNamed('/faq'),
                     ),
                     _buildDivider(),
                     _buildMenuTile(
-                      icon: Icons.confirmation_number_outlined,
+                      icon: Icons.confirmation_number_rounded,
                       title: "Raise a Ticket",
+                      iconColor: const Color(0xFFD97706), // amber-600
+                      iconBgColor: const Color(0xFFFFFBEB), // amber-50
                       onTap: () => Get.toNamed('/ticket'),
                     ),
                     _buildDivider(),
                     _buildMenuTile(
-                      icon: Icons.policy_outlined,
+                      icon: Icons.policy_rounded,
                       title: "Terms and Policy",
+                      iconColor: const Color(0xFF475569), // slate-600
+                      iconBgColor: const Color(0xFFF1F5F9), // slate-50
                       onTap: () => Get.toNamed('/terms'),
                     ),
                   ]),
 
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 28),
 
                   // 4. DANGER ZONE
                   _buildMenuContainer([
                     _buildMenuTile(
                       icon: Icons.delete_outline_rounded,
                       title: "Delete Account",
+                      iconColor: const Color(0xFFEF4444),
+                      iconBgColor: const Color(0xFFFEF2F2),
                       isDestructive: true,
                       onTap: () {
                         // Add delete logic dialog here
@@ -136,9 +158,13 @@ class ProfileScreen extends StatelessWidget {
                   // Version Text
                   const Text(
                     "Version 1.0.0",
-                    style: TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
+                    style: TextStyle(
+                      color: Color(0xFF94A3B8),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                  const SizedBox(height: 200),
+                  const SizedBox(height: 120),
                 ],
               ),
             );
@@ -150,69 +176,200 @@ class ProfileScreen extends StatelessWidget {
 
   // --- WIDGETS ---
 
-  Widget _buildProfileHeader(String name) {
-    return Column(
-      children: [
-        Stack(
-          children: [
-            Container(
+  Widget _buildProfileHeaderCard(
+    BuildContext context,
+    ProfileController controller,
+    String name,
+    String email,
+    String mobile,
+  ) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        gradient: const LinearGradient(
+          colors: [
+            Color(0xFF0F172A), // Slate-900
+            Color(0xFF1E293B), // Slate-800
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Stack(
+        children: [
+          // Background abstract graphic circles
+          Positioned(
+            right: -30,
+            top: -30,
+            child: Container(
+              width: 140,
+              height: 140,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.white, width: 4),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 5),
-                  ),
-                ],
-              ),
-              child: const CircleAvatar(
-                radius: 45,
-                backgroundColor: Color(0xFFE2E8F0),
-                backgroundImage: AssetImage('assets/images/man.png'),
+                color: Colors.white.withOpacity(0.02),
               ),
             ),
-            Positioned(
-              bottom: 0,
-              right: 0,
-              child: Container(
-                padding: const EdgeInsets.all(6),
-                decoration: const BoxDecoration(
-                  color: Colors.blueAccent,
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.edit, size: 14, color: Colors.white),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        Text(
-          name,
-          style: const TextStyle(
-            fontFamily: 'SN Pro',
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
-            color: Color(0xFF1E293B),
           ),
-        ),
-      ],
+          Positioned(
+            left: -20,
+            bottom: -40,
+            child: Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withOpacity(0.01),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              children: [
+                // Glowing Avatar ring
+                Container(
+                  padding: const EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.15),
+                      width: 2,
+                    ),
+                  ),
+                  child: const CircleAvatar(
+                    radius: 36,
+                    backgroundColor: Color(0xFFE2E8F0),
+                    backgroundImage: AssetImage('assets/images/man.png'),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Designation Badge
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.blueAccent.withOpacity(0.15),
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(
+                            color: Colors.blueAccent.withOpacity(0.2),
+                          ),
+                        ),
+                        child: const Text(
+                          "TRAINEE",
+                          style: TextStyle(
+                            color: Colors.blueAccent,
+                            fontSize: 8,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 0.8,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontFamily: 'SN Pro',
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        email,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.white.withOpacity(0.65),
+                        ),
+                      ),
+                      if (mobile.isNotEmpty) ...[
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.phone_iphone_rounded,
+                              size: 11,
+                              color: Colors.white.withOpacity(0.6),
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              mobile,
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.white.withOpacity(0.6),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Top right Quick Edit Button
+          Positioned(
+            top: 12,
+            right: 12,
+            child: IconButton(
+              icon: const Icon(
+                Icons.mode_edit_outline_outlined,
+                color: Colors.white60,
+                size: 20,
+              ),
+              onPressed: () {
+                controller.getUserDetails(
+                  () => showLoader(),
+                  () {
+                    hideLoader();
+                    Get.toNamed('/edit-profile');
+                  },
+                  (msg) {
+                    hideLoader();
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(myErrorSnackBar('Error', msg));
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildSectionHeader(String title) {
     return Padding(
-      padding: const EdgeInsets.only(left: 4, bottom: 8),
+      padding: const EdgeInsets.only(left: 4, bottom: 10),
       child: Align(
         alignment: Alignment.centerLeft,
         child: Text(
           title.toUpperCase(),
           style: const TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 1.0,
-            color: Color(0xFF94A3B8), // Slate-400
+            fontSize: 10,
+            fontWeight: FontWeight.w800,
+            letterSpacing: 1.1,
+            color: Color(0xFF64748B), // Slate-500
           ),
         ),
       ),
@@ -223,13 +380,13 @@ class ProfileScreen extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFF1F5F9)),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFFE2E8F0)), // Slate-200
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.02),
-            blurRadius: 5,
-            offset: const Offset(0, 2),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -241,6 +398,8 @@ class ProfileScreen extends StatelessWidget {
     required IconData icon,
     required String title,
     required VoidCallback onTap,
+    required Color iconColor,
+    required Color iconBgColor,
     bool isDestructive = false,
   }) {
     return ListTile(
@@ -249,23 +408,17 @@ class ProfileScreen extends StatelessWidget {
       leading: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: isDestructive
-              ? const Color(0xFFFEF2F2)
-              : const Color(0xFFF8FAFC),
-          borderRadius: BorderRadius.circular(8),
+          color: iconBgColor,
+          borderRadius: BorderRadius.circular(10),
         ),
-        child: Icon(
-          icon,
-          size: 20,
-          color: isDestructive ? Colors.redAccent : const Color(0xFF64748B),
-        ),
+        child: Icon(icon, size: 18, color: iconColor),
       ),
       title: Text(
         title,
         style: TextStyle(
           fontFamily: 'SN Pro',
           fontSize: 14,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w700,
           color: isDestructive ? Colors.redAccent : const Color(0xFF334155),
         ),
       ),
@@ -282,31 +435,45 @@ class ProfileScreen extends StatelessWidget {
       height: 1,
       thickness: 1,
       color: Color(0xFFF1F5F9), // Slate-100
-      indent: 60, // Start after the icon
+      indent: 52, // Start after the icon box
     );
-  }
-
-  // --- LOGIC ---
-
-  String getGreeting() {
-    final hour = DateTime.now().hour;
-    if (hour < 12) return "Good Morning";
-    if (hour < 17) return "Good Afternoon";
-    return "Good Evening";
   }
 
   void _showLogoutDialog(BuildContext context, ProfileController controller) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text(
-          'Log Out',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        backgroundColor: Colors.white,
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: const BoxDecoration(
+                color: Color(0xFFFEF2F2),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.power_settings_new_rounded,
+                color: Color(0xFFEF4444),
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 12),
+            const Text(
+              'Log Out',
+              style: TextStyle(
+                fontFamily: 'SN Pro',
+                fontWeight: FontWeight.w800,
+                fontSize: 18,
+                color: Color(0xFF1E293B),
+              ),
+            ),
+          ],
         ),
         content: const Text(
-          'Are you sure you want to log out of your account?',
-          style: TextStyle(color: Color(0xFF64748B)),
+          'Are you sure you want to log out of your trainee account?',
+          style: TextStyle(color: Color(0xFF64748B), fontSize: 14),
         ),
         actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         actions: [
@@ -314,7 +481,10 @@ class ProfileScreen extends StatelessWidget {
             onPressed: () => Navigator.of(context).pop(),
             child: const Text(
               'Cancel',
-              style: TextStyle(color: Color(0xFF64748B)),
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF64748B),
+              ),
             ),
           ),
           ElevatedButton(
@@ -323,7 +493,7 @@ class ProfileScreen extends StatelessWidget {
               foregroundColor: Colors.white,
               elevation: 0,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(12),
               ),
             ),
             onPressed: () {
@@ -342,7 +512,10 @@ class ProfileScreen extends StatelessWidget {
                 },
               );
             },
-            child: const Text('Log Out'),
+            child: const Text(
+              'Log Out',
+              style: TextStyle(fontWeight: FontWeight.w700),
+            ),
           ),
         ],
       ),
